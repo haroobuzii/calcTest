@@ -6,6 +6,11 @@ public class Calc {
     private static final String MULTIPLY = " * ";
 
     public static int run(String expression) {
+        // 식 전체가 괄호로 감싸져 있으면 괄호를 벗기고 안쪽 식을 계산한다
+        if (expression.startsWith("(") && expression.endsWith(")")) {
+            return run(expression.substring(1, expression.length() - 1));
+        }
+
         // 우선순위가 가장 낮은 덧셈·뺄셈부터 찾아서 나눈다
         // → 곱셈은 나뉜 조각 안에 남아 먼저 계산된다
         int addSubIndex = Math.max(expression.lastIndexOf(PLUS), expression.lastIndexOf(MINUS));
