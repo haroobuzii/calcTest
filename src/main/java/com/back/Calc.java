@@ -5,9 +5,16 @@ public class Calc {
         // 가장 오른쪽에 있는 " + " 또는 " - " 의 위치를 찾는다
         int operatorIndex = Math.max(expression.lastIndexOf(" + "), expression.lastIndexOf(" - "));
 
-        // 더 이상 연산자가 없으면 숫자 하나뿐이다 (재귀 종료 조건)
+        // " + ", " - " 가 없으면 곱셈만 남은 식이거나 숫자 하나다
         if (operatorIndex == -1) {
-            return Integer.parseInt(expression);
+            int multiplyIndex = expression.lastIndexOf(" * ");
+
+            // 곱셈도 없으면 숫자 하나뿐이다 (재귀 종료 조건)
+            if (multiplyIndex == -1) {
+                return Integer.parseInt(expression);
+            }
+
+            return run(expression.substring(0, multiplyIndex)) * run(expression.substring(multiplyIndex + 3));
         }
 
         // 가장 오른쪽 연산자를 기준으로 "앞쪽 식"과 "마지막 수"로 나눈다
