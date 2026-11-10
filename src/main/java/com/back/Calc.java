@@ -21,6 +21,12 @@ public class Calc {
             return run(expression.substring(1, expression.length() - 1));
         }
 
+        // 괄호 앞에 음수 부호가 붙어 있으면 "-1 × 괄호 안의 값"이다
+        // 예) "-(10 + 5)" → -run("(10 + 5)")
+        if (expression.startsWith("-(")) {
+            return -run(expression.substring(1));
+        }
+
         // 연산자가 하나도 없으면 숫자 하나뿐이다 (재귀 종료 조건)
         // "-10" 처럼 음수도 그대로 변환된다
         return Integer.parseInt(expression);
