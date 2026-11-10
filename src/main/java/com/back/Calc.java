@@ -7,13 +7,13 @@ public class Calc {
         int addSubIndex = findLastOperatorOutsideParens(expression, "+-");
 
         if (addSubIndex != -1) {
-            return calcAddSub(expression, addSubIndex);
+            return calc(expression, addSubIndex);
         }
 
         int multiplyIndex = findLastOperatorOutsideParens(expression, "*");
 
         if (multiplyIndex != -1) {
-            return calcMultiply(expression, multiplyIndex);
+            return calc(expression, multiplyIndex);
         }
 
         // 괄호 밖에 연산자가 없고 식 전체가 괄호로 감싸져 있으면, 괄호를 벗기고 안쪽 식을 계산한다
@@ -61,25 +61,19 @@ public class Calc {
                 && expression.charAt(index + 1) == ' ';
     }
 
-    // 가장 오른쪽 덧셈/뺄셈을 기준으로 "앞쪽 식"과 "마지막 항"으로 나눈다
+    // 찾은 연산자를 기준으로 "앞쪽 식"과 "마지막 항"으로 나눠 각각 재귀로 계산한다
     // 예) "10 - 20 + 30" → run("10 - 20") + run("30")
-    // 앞쪽 식이 먼저 계산되므로 왼쪽부터 차례대로 계산한 것과 같다
-    private static int calcAddSub(String expression, int index) {
+    // 가장 오른쪽 연산자에서 나누므로 앞쪽 식이 먼저 계산된다 = 왼쪽부터 차례대로 계산한 것과 같다
+    private static int calc(String expression, int index) {
         int left = run(expression.substring(0, index));
+        char operator = expression.charAt(index + 1);
         int right = run(expression.substring(index + 3));
 
-        if (expression.charAt(index + 1) == '+') {
-            return left + right;
-        }
-
-        return left - right;
-    }
-
-    // 예) "10 * 10 * 10" → run("10 * 10") * run("10")
-    private static int calcMultiply(String expression, int index) {
-        int left = run(expression.substring(0, index));
-        int right = run(expression.substring(index + 3));
-
-        return left * right;
+        return switch (operator) {
+            case '+' -> left + right;
+            case '-' -> left - right;
+            case '*' -> left * right;
+            default -> throw new IllegalArgumentException("지원하지 않는 연산자: " + operator);
+        };
     }
 }
