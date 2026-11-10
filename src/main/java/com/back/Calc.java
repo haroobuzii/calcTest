@@ -11,11 +11,17 @@ public class Calc {
             return num1 - num2;
         }
 
-        String[] expressionBits = expression.split(" \\+ ");
+        int plusIndex = expression.indexOf(" + ");
 
-        int num1 = Integer.parseInt(expressionBits[0]);
-        int num2 = Integer.parseInt(expressionBits[1]);
+        // 더 이상 연산자가 없으면 숫자 하나뿐이다 (재귀 종료 조건)
+        if (plusIndex == -1) {
+            return Integer.parseInt(expression);
+        }
 
-        return num1 + num2;
+        // "첫 번째 수" + "나머지 식"으로 나누고, 나머지 식은 다시 run 으로 계산한다
+        String left = expression.substring(0, plusIndex);
+        String right = expression.substring(plusIndex + 3);
+
+        return run(left) + run(right);
     }
 }
